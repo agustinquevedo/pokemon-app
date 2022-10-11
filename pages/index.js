@@ -1,8 +1,8 @@
 import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Loading from "../components/atoms/Loading/Loading";
 import Layout from "../components/layout/Layout/Layout";
+import Gallery from "../components/layout/Gallery/Gallery";
 import Card from "../components/molecules/Card/Card";
 import Paginator from "../components/molecules/Paginator/Paginator";
 
@@ -16,6 +16,17 @@ export default function Home() {
   const [previousPage, setPreviousPage] = useState();
   const [page, setPage] = useState(1);
   const [nextPage, setNextPage] = useState();
+
+  const getPokemonData = async (data) => {
+    data.map(async (pokemon) => {
+      const result = await axios.get(pokemon.url);
+      setPokemonList((state) => {
+        state = [...state, result.data];
+        state.sort((a, b) => (a.id > b.id ? 1 : -1));
+        return state;
+      });
+    });
+  };
 
   const handlePreviousPageButton = () => {
     setPokemonList([]);
@@ -36,7 +47,7 @@ export default function Home() {
       setTotal(Math.ceil(res.data.count / 20));
       setPreviousPage(res.data.previous);
       setNextPage(res.data.next);
-      setPokemonList(res.data.results);
+      getPokemonData(res.data.results);
       setLoading(false);
     };
     getData();
@@ -59,9 +70,18 @@ export default function Home() {
           nexButtonDisabled={!nextPage}
         />
 
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+        <Gallery>
           <Card pokemonData={pokemonList} loading={loading} />
-        </div>
+        </Gallery>
+
+        <Paginator
+          totalPages={total}
+          page={page}
+          previousPageButton={handlePreviousPageButton}
+          previousButtonDisabled={!previousPage}
+          nextPageButton={handleNextPageButton}
+          nexButtonDisabled={!nextPage}
+        />
       </Layout>
     </div>
   );
