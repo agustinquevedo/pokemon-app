@@ -5,6 +5,7 @@ import Layout from "../components/layout/Layout/Layout";
 import Gallery from "../components/layout/Gallery/Gallery";
 import Card from "../components/molecules/Card/Card";
 import Paginator from "../components/molecules/Paginator/Paginator";
+import SearchBar from "../components/molecules/SearchBar/SearchBar";
 
 export default function Home() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -50,6 +51,7 @@ export default function Home() {
       getPokemonData(res.data.results);
       setLoading(false);
     };
+
     getData();
   }, [url]);
 
@@ -61,6 +63,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
+        <SearchBar />
+
         <Paginator
           totalPages={total}
           page={page}

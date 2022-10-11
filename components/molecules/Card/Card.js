@@ -22,6 +22,7 @@ export default function Card({ pokemonData, loading }) {
                 height={96}
                 objectFit="cover"
               />
+
               <div className="flex flex-col p-4">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 capitalize">
                   {pokemon.name}
